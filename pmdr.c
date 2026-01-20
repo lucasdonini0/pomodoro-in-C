@@ -23,12 +23,10 @@ int is_paused = 0;
             {
                 if (is_paused == 0)
                 {
-                    printf("\nPaused");
                     is_paused = 1;
                 }
                 else
                 {
-                    printf("\nUnpaused");
                     is_paused = 0;
                 }
             }

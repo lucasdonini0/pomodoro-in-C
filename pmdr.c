@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <conio.h>
 
+float pversion = 0.2;
 // Playing a sound is too hard, I don't understand any of this
 void playsound()
 {
@@ -12,18 +13,41 @@ void playsound()
     printf("\a");
 }
 
-void stopctd()
-{
-    if (kbhit())
+int is_paused = 0;
+    void pause_stop()
     {
-        char key = getch();
-        if (key == 'q' || key == 'Q')
+        if (kbhit())
         {
-            system("cls");
-            printf("Stopped\nClosing in 3 seconds...");
-            Sleep(3800);
-            exit (0);
+            char key = getch();
+            if (key == 'p' || key == 'P')
+            {
+                if (is_paused == 0)
+                {
+                    printf("\nPaused");
+                    is_paused = 1;
+                }
+                else
+                {
+                    printf("\nUnpaused");
+                    is_paused = 0;
+                }
+            }
+            if (key == 'q' || key == 'Q')
+            {
+                system("cls");
+                printf("Stopped\nClosing in 3 seconds...");
+                Sleep(3800);
+                exit (0);
+            }
         }
+    }
+
+void sleep_and_checks()
+{
+    for (int i = 0; i < 10; i++)
+    {
+        pause_stop();
+        Sleep(100);
     }
 }
 
@@ -33,30 +57,31 @@ void pomodoro_timer(int total_seconds)
     int rest_time = total_seconds / 10;
     while (focus_time > -1)
     {
-        stopctd();
         // display a countdown
         int minutes = focus_time / 60;
         int seconds = focus_time % 60;
-        printf("\rFocus Time: %d:%02d (Press 'q' to stop countdown)", minutes, seconds);
+        printf("\rFocus Time: %d:%02d (Press 'q' to stop countdown and 'p' to pause/resume)", minutes, seconds);
         fflush(stdout);
-        Sleep(1000);
-        focus_time--;
+        sleep_and_checks();
+        if (is_paused == 0)
+        {
+            focus_time--;
+        }
     }
         
     playsound();
         
     while (rest_time > -1)
     {
-        stopctd();
         int minutes = rest_time / 60;
         int seconds = rest_time % 60;
         printf("\rRest Time: %d:%02d ", minutes, seconds);
         fflush(stdout);
-        Sleep(1000);
+        sleep_and_checks();
         rest_time--;
     }
     system("cls");
-    printf("Thanks for using PomoHub v0.1!\n");
+    printf("Thanks for using PomoHub v%.1f!\n", pversion);
     playsound ();
     system("pause");   
 }
@@ -67,7 +92,7 @@ int main ()
     {
         int mode;
         system("cls");
-        printf("PomoHub v0.1 - This version has no audio yet.\n");
+        printf("PomoHub v%.1f - This version has no audio yet.\n", pversion);
         Sleep(1500);
         printf("1. 25 min - 5 min rest\n2. 50 min - 10 min rest\n");
         printf("Choice: ");

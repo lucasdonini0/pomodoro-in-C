@@ -77,7 +77,10 @@ void pomodoro_timer(int total_seconds)
         printf("\rRest Time: %d:%02d ", minutes, seconds);
         fflush(stdout);
         sleep_and_checks();
-        rest_time--;
+        if (is_paused == 0)
+        {
+            rest_time--;
+        }
     }
     system("cls");
     printf("Thanks for using PomoHub v%.1f!\n", pversion);

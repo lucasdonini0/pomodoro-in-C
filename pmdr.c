@@ -3,7 +3,8 @@
 #include <conio.h>
 
 float pversion = 0.2;
-// Playing a sound is too hard, I don't understand any of this
+
+// My dumb but working alternative to try to play a sound in C instead of having to engineer an entire sound driver
 void playsound()
 {
     printf("\a");
@@ -52,7 +53,7 @@ void sleep_and_checks()
 void pomodoro_timer(int total_seconds)
 {
     int focus_time = total_seconds / 1.2;
-    int rest_time = total_seconds / 10;
+    int rest_time = total_seconds / 6;
     while (focus_time > -1)
     {
         // display a countdown

@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <conio.h>
 
-float pversion = 0.2;
+float pversion = 0.3;
 
 // My dumb but working alternative to try to play a sound in C instead of having to engineer an entire sound driver
 void playsound()
@@ -15,6 +15,7 @@ void playsound()
 }
 
 int is_paused = 0;
+int is_running = 1;
     void pause_stop()
     {
         if (kbhit())
@@ -33,10 +34,10 @@ int is_paused = 0;
             }
             if (key == 'q' || key == 'Q')
             {
+                is_running = 0;
                 system("cls");
-                printf("Stopped\nClosing in 3 seconds...");
-                Sleep(3800);
-                exit (0);
+                printf("Stopped\nGoing back to the menu!");
+                Sleep(3000);
             }
         }
     }
@@ -54,7 +55,7 @@ void pomodoro_timer(int total_seconds)
 {
     int focus_time = total_seconds / 1.2;
     int rest_time = total_seconds / 6;
-    while (focus_time > -1)
+    while (focus_time > -1 && is_running)
     {
         // display a countdown
         int minutes = focus_time / 60;
@@ -67,10 +68,10 @@ void pomodoro_timer(int total_seconds)
             focus_time--;
         }
     }
-        
+    
     playsound();
         
-    while (rest_time > -1)
+    while (rest_time > -1 && is_running)
     {
         int minutes = rest_time / 60;
         int seconds = rest_time % 60;
@@ -85,20 +86,22 @@ void pomodoro_timer(int total_seconds)
     system("cls");
     printf("Thanks for using PomoHub v%.1f!\n", pversion);
     playsound ();
-    system("pause");   
 }
 
 int main ()
 {
-    while (1)
+    while (is_running == 1)
     {
+        
         int mode;
         system("cls");
-        printf("PomoHub v%.1f - This version has no audio yet.\n", pversion);
+        printf("PomoHub v%.1f - This version has no audio.\n", pversion);
         Sleep(1500);
-        printf("1. 25 min - 5 min rest\n2. 50 min - 10 min rest\n");
+        printf("1. 25 min focus - 5 min rest\n2. 50 min focus - 10 min rest\n3. Custom!\n");
         printf("Choice: ");
         scanf("%d", &mode);
+        is_running = 1;
+        is_paused = 0;
     
         if (mode == 1)
         {
@@ -108,6 +111,13 @@ int main ()
         else if (mode == 2)
         {
             int total_seconds = 3600;
+            pomodoro_timer(total_seconds);
+        }
+        else if (mode == 3){
+            int custom_time;
+            printf("Enter the cicle time (focus + rest): ");
+            scanf("%i", &custom_time);
+            int total_seconds = custom_time * 60;
             pomodoro_timer(total_seconds);
         }
         else if (mode == 67)
@@ -151,14 +161,12 @@ int main ()
             printf("                                      -@@%%@..++*@%%.          \n"); printf("\a"); Sleep(200);
             system("start https://www.youtube.com/shorts/pLsPNxr0HZM");
             Sleep(3000);
-            exit(0);
         }
         else
         {
             system("cls");
             printf("Wrong Input!\n Deleting System32");
             Sleep(3000);
-            exit(0);
         }
     }
 }

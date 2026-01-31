@@ -37,7 +37,6 @@ int is_running = 1;
                 is_running = 0;
                 system("cls");
                 printf("Stopped\nGoing back to the menu!");
-                Sleep(3000);
             }
         }
     }
@@ -68,7 +67,7 @@ void pomodoro_timer(int total_seconds)
             focus_time--;
         }
     }
-    
+    system("cls");
     playsound();
         
     while (rest_time > -1 && is_running)
@@ -82,15 +81,18 @@ void pomodoro_timer(int total_seconds)
         {
             rest_time--;
         }
+        if (rest_time == -1){
+            system("cls");
+            printf("Thanks for using PomoHub v%.1f!\n", pversion);
+            playsound ();
+        }
     }
-    system("cls");
-    printf("Thanks for using PomoHub v%.1f!\n", pversion);
-    playsound ();
+
 }
 
 int main ()
 {
-    while (is_running == 1)
+    while (1)
     {
         
         int mode;
